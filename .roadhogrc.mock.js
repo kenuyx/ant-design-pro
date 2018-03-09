@@ -1,5 +1,6 @@
 import mockjs from 'mockjs';
 import { getRule, postRule } from './mock/rule';
+import { getStore, putStore } from './mock/store';
 import { getActivities, getNotice, getFakeList, postFakeList } from './mock/api';
 import { getFakeChartData } from './mock/chart';
 import { getProfileBasicData } from './mock/profile';
@@ -31,6 +32,7 @@ const proxy = {
       signature: '海纳百川，有容乃大',
       title: '交互专家',
       group: '蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED',
+      roles: ['admin', 'guard'],
       tags: [{
         key: '0',
         label: '很有想法的',
@@ -87,6 +89,18 @@ const proxy = {
       address: 'Sidney No. 1 Lake Park',
     },
   ],
+  'GET /api/roles/test': {
+    $desc: "获取用户权限",
+    $body: ['test'],
+  },
+  'GET /api/roles/admin': {
+    $desc: "获取用户权限",
+    $body: ['admin', 'guard'],
+  },
+  'GET /api/roles/guard': {
+    $desc: "获取用户权限",
+    $body: ['guard'],
+  },
   'GET /api/project/notice': getNotice,
   'GET /api/activities': getActivities,
   'GET /api/rule': getRule,
@@ -99,6 +113,7 @@ const proxy = {
     },
     $body: postRule,
   },
+  'GET /api/stores': getStore,
   'POST /api/forms': (req, res) => {
     res.send({ message: 'Ok' });
   },
@@ -114,28 +129,26 @@ const proxy = {
     const { password, userName, type } = req.body;
     if (password === '888888' && userName === 'admin') {
       res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'admin',
+        state: true,
+        token: 'admin',
+        roles: ['admin'],
       });
       return;
     }
     if (password === '123456' && userName === 'user') {
       res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'user',
+        state: true,
+        token: 'guard',
+        roles: ['guard'],
       });
       return;
     }
     res.send({
-      status: 'error',
-      type,
-      currentAuthority: 'guest',
+      state: false,
     });
   },
   'POST /api/register': (req, res) => {
-    res.send({ status: 'ok', currentAuthority: 'user' });
+    res.send({ state: true, token: 'user', roles: ['user'] });
   },
   'GET /api/notices': getNotices,
   'GET /api/500': (req, res) => {

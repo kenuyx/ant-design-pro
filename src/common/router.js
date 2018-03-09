@@ -3,6 +3,47 @@ import dynamic from 'dva/dynamic';
 import pathToRegexp from 'path-to-regexp';
 import { getMenuData } from './menu';
 
+// const menuRouterData = [{
+//   name: '工作台',
+//   icon: 'dashboard',
+//   path: 'workplace',
+//   models: ['user', 'project', 'activities', 'chart'],
+//   component: import('../routes/Dashboard/Workplace'),
+//   authority: 'admin',
+// }, {
+//   name: '表单页',
+//   icon: 'form',
+//   path: 'form',
+//   models: ['form'],
+//   children: [{
+//     name: '基础表单',
+//     path: 'basic-form',
+//     component: import('../routes/Forms/BasicForm'),
+//   }, {
+//     name: '分步表单',
+//     path: 'step-form',
+//     component: import('../routes/Forms/StepForm'),
+//     authority: 'admin',
+//     children: [{
+//       name: '分步表单（填写转账信息）',
+//       path: 'info',
+//       component: import('../routes/Forms/StepForm/Step1'),
+//     }, {
+//       name: '分步表单（确认转账信息）',
+//       path: 'confirm',
+//       component: import('../routes/Forms/StepForm/Step1'),
+//     }, {
+//       name: '分步表单（完成）',
+//       path: 'result',
+//       component: import('../routes/Forms/StepForm/Step1'),
+//     }],
+//   }, {
+//     name: '高级表单',
+//     path: 'advanced-form',
+//     component: import('../routes/Forms/AdvancedForm'),
+//   }],
+// }];
+
 let routerDataCache;
 
 const modelNotExisted = (app, model) => (
@@ -73,6 +114,9 @@ export const getRouterData = (app) => {
     '/': {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
+    '/store/list': {
+      component: dynamicWrapper(app, ['user', 'store'], () => import('../routes/Store/StoreTable')),
+    },
     '/dashboard/analysis': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
     },
@@ -81,9 +125,8 @@ export const getRouterData = (app) => {
     },
     '/dashboard/workplace': {
       component: dynamicWrapper(app, ['user', 'project', 'activities', 'chart'], () => import('../routes/Dashboard/Workplace')),
-      // hideInBreadcrumb: true,
-      // name: '工作台',
-      // authority: 'admin',
+      hideInBreadcrumb: true,
+      name: '工作台',
     },
     '/form/basic-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
@@ -105,6 +148,7 @@ export const getRouterData = (app) => {
     },
     '/form/advanced-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/AdvancedForm')),
+      authority: ['guard'],
     },
     '/list/table-list': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/List/TableList')),
@@ -114,18 +158,23 @@ export const getRouterData = (app) => {
     },
     '/list/card-list': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/List/CardList')),
+      authority: ['admin', 'guard'],
     },
     '/list/search': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
+      authority: ['user'],
     },
     '/list/search/projects': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/List/Projects')),
+      authority: ['user'],
     },
     '/list/search/applications': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/List/Applications')),
+      authority: ['user'],
     },
     '/list/search/articles': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/List/Articles')),
+      authority: ['user'],
     },
     '/profile/basic': {
       component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/BasicProfile')),

@@ -1,12 +1,12 @@
 import { fakeRegister } from '../services/api';
-import { setAuthority } from '../utils/authority';
+import { setAuthentity } from '../utils/authentity';
 import { reloadAuthorized } from '../utils/Authorized';
 
 export default {
   namespace: 'register',
 
   state: {
-    status: undefined,
+    status: false,
   },
 
   effects: {
@@ -21,11 +21,11 @@ export default {
 
   reducers: {
     registerHandle(state, { payload }) {
-      setAuthority('user');
-      reloadAuthorized();
+      setAuthentity(payload.token);
+      reloadAuthorized(payload.roles);
       return {
         ...state,
-        status: payload.status,
+        status: payload.state,
       };
     },
   },

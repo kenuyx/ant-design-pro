@@ -1,21 +1,22 @@
 import { isUrl } from '../utils/utils';
 
-const menuData = [{
-  name: 'dashboard',
+const menuData = [/* {
+  name: '工作台',
   icon: 'dashboard',
-  path: 'dashboard',
-  children: [{
-    name: '分析页',
-    path: 'analysis',
-  }, {
-    name: '监控页',
-    path: 'monitor',
-  }, {
-    name: '工作台',
-    path: 'workplace',
-    // hideInMenu: true,
-  }],
+  path: 'dashboard/workplace',
+},  */{
+  name: '店铺列表',
+  icon: 'table',
+  path: 'store/list',
 }, {
+  name: '访客日志',
+  icon: 'profile',
+  path: 'customer/log',
+}, {
+  name: '防盗追讨',
+  icon: 'exception',
+  path: 'exception/recovery',
+}, /* {
   name: '表单页',
   icon: 'form',
   path: 'form',
@@ -27,7 +28,7 @@ const menuData = [{
     path: 'step-form',
   }, {
     name: '高级表单',
-    authority: 'admin',
+    authority: ['user'],
     path: 'advanced-form',
   }],
 }, {
@@ -43,9 +44,11 @@ const menuData = [{
   }, {
     name: '卡片列表',
     path: 'card-list',
+    authority: ['admin', 'guard'],
   }, {
     name: '搜索列表',
     path: 'search',
+    authority: ['user'],
     children: [{
       name: '搜索列表（文章）',
       path: 'articles',
@@ -102,7 +105,7 @@ const menuData = [{
   name: '账户',
   icon: 'user',
   path: 'user',
-  authority: 'guest',
+  authority: ['guest'],
   children: [{
     name: '登录',
     path: 'login',
@@ -124,7 +127,7 @@ const menuData = [{
     name: '个人设置',
     path: 'userinfo',
   }],
-}];
+} */];
 
 function formatter(data, parentPath = '/', parentAuthority) {
   return data.map((item) => {

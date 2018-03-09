@@ -22,6 +22,9 @@ const renderAuthorize = (currentAuthority) => {
     if (currentAuthority.constructor.name === 'String') {
       CURRENT = currentAuthority;
     }
+    if (currentAuthority.constructor.name === 'Array') {
+      CURRENT = currentAuthority;
+    }
   } else {
     CURRENT = 'NULL';
   }

@@ -5,6 +5,7 @@ import zhCN from 'antd/lib/locale-provider/zh_CN';
 import dynamic from 'dva/dynamic';
 import { getRouterData } from './common/router';
 import Authorized from './utils/Authorized';
+import { checkAuthentity } from './utils/authentity';
 import styles from './index.less';
 
 const { ConnectedRouter } = routerRedux;
@@ -28,7 +29,7 @@ function RouterConfig({ history, app }) {
           <AuthorizedRoute
             path="/"
             render={props => <BasicLayout {...props} />}
-            authority={['admin', 'user']}
+            authority={checkAuthentity}
             redirectPath="/user/login"
           />
         </Switch>
