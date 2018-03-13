@@ -4,7 +4,7 @@ import { AUTHENTITY_KEY } from '../utils/authentity';
 
 export async function checkAuthority(permittedRoles, userData) {
   if (!permittedRoles) {
-    return await Promise.resolve();
+    return Promise.resolve();
   }
 
   let currentRoles = [];
@@ -17,8 +17,8 @@ export async function checkAuthority(permittedRoles, userData) {
     }
   }
 
-  if (currentRoles.length == 0) {
-    return await Promise.reject();
+  if (currentRoles.length === 0) {
+    return Promise.reject();
   }
 
   const authorized = Array.some(
@@ -26,7 +26,7 @@ export async function checkAuthority(permittedRoles, userData) {
     currentRole => Array.indexOf(permittedRoles, currentRole) >= 0
   );
   if (authorized) {
-    return await Promise.resolve();
+    return Promise.resolve();
   }
-  return await Promise.reject();
+  return Promise.reject();
 }

@@ -5,18 +5,18 @@ const menuData = [/* {
   icon: 'dashboard',
   path: 'dashboard/workplace',
 },  */{
-  name: '店铺列表',
-  icon: 'table',
-  path: 'store/list',
-}, {
-  name: '访客日志',
-  icon: 'profile',
-  path: 'customer/log',
-}, {
-  name: '防盗追讨',
-  icon: 'exception',
-  path: 'exception/recovery',
-}, /* {
+    name: '店铺列表',
+    icon: 'table',
+    path: 'store/list',
+  }, {
+    name: '访客日志',
+    icon: 'profile',
+    path: 'customer/log',
+  }, {
+    name: '防盗追讨',
+    icon: 'exception',
+    path: 'exception/recovery',
+  }, /* {
   name: '表单页',
   icon: 'form',
   path: 'form',
