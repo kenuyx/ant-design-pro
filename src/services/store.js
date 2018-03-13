@@ -12,3 +12,10 @@ export async function update(params) {
     body: restParams,
   });
 }
+
+export async function open(params) {
+  const { shop, door } = params;
+  return request(`/api/stores/${shop}/doors/${door}`, {
+    method: 'PUT',
+  });
+}

@@ -21,9 +21,11 @@ import {
   Steps,
   Radio,
   Tooltip,
+  Popover,
 } from 'antd';
 import StandardTable from '../../components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import { open } from '../../services/store';
 
 import styles from './StoreTable.less';
 
@@ -37,7 +39,58 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['停业', '营业', '就绪', '异常'];
+const status = ['休息中', '在营业', '已就绪', '有异常'];
+
+class DoorPanel extends PureComponent {
+  state = {
+    entrance: 'lock',
+    exit: 'lock',
+  }
+  open = (door) => {
+    if (this.state[door] === 'unlock') {
+      return;
+    }
+    this.setState({
+      [door]: 'opening',
+    });
+    open({ shop: this.props.shop, door: door}).then(() => {
+      this.setState({
+        [door]: 'unlock',
+      });
+      setTimeout(() => {
+        this.setState({
+          [door]: 'lock',
+        });
+      }, 3000);
+    }).catch(() => {
+      this.setState({
+        [door]: 'lock',
+      });
+    });
+  };
+  render() {
+    return (
+      <Button.Group>
+        <Button
+          type={this.state.entrance === 'lock' ? "danger" : "primary"}
+          icon={this.state.entrance}
+          loading={this.state.entrance === 'opening'}
+          onClick={() => this.open('entrance')}
+        >
+          入口
+        </Button>
+        <Button
+          type={this.state.exit === 'lock' ? "danger" : "primary"}
+          icon={this.state.exit}
+          loading={this.state.exit === 'opening'}
+          onClick={() => this.open('exit')}
+        >
+          出口
+        </Button>
+      </Button.Group>
+    );
+  }
+}
 
 @Form.create()
 class UpdateForm extends PureComponent {
@@ -256,7 +309,7 @@ export default class StoreTable extends PureComponent {
   columns = [
     {
       title: '编号',
-      dataIndex: 'key',
+      dataIndex: 'id',
       sorter: true,
       render: text => <a href="#">{text}</a>,
     },
@@ -266,16 +319,20 @@ export default class StoreTable extends PureComponent {
     },
     {
       title: '城市',
-      dataIndex: 'city',
+      dataIndex: 'address.city',
     },
     {
       title: '地址',
-      dataIndex: 'address',
+      dataIndex: 'address.street',
     },
     {
       title: '负责人',
       dataIndex: 'owner',
-      render: data => <Tooltip title={data.mobile}><span>{data.name}</span></Tooltip>,
+      render: (text, record) => (
+        <Tooltip title={record.mobile}>
+          <span>{text}</span>
+        </Tooltip>
+      ),
     },
     {
       title: '状态',
@@ -306,9 +363,9 @@ export default class StoreTable extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleUpdateModalVisible(true, record)}>芝麻开门</a>
-          <Divider type="vertical" />
-          <a href="">订阅通知</a>
+          <Popover content={<DoorPanel shop={record.id} />} trigger="click">
+            <a>芝麻开门</a>
+          </Popover>
         </Fragment>
       ),
     },
@@ -440,7 +497,7 @@ export default class StoreTable extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={4} sm={24}>
             <FormItem label="编号">
-              {getFieldDecorator('number')(<InputNumber style={{ width: '100%' }} />)}
+              {getFieldDecorator('id')(<InputNumber style={{ width: '100%' }} />)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
@@ -450,17 +507,17 @@ export default class StoreTable extends PureComponent {
           </Col>
           <Col md={4} sm={24}>
             <FormItem label="城市">
-              {getFieldDecorator('name')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('city')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={4} sm={24}>
             <FormItem label="状态">
               {getFieldDecorator('status')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">停业</Option>
-                  <Option value="1">营业</Option>
-                  <Option value="2">就绪</Option>
-                  <Option value="3">异常</Option>
+                  <Option value="0">休息中</Option>
+                  <Option value="1">在营业</Option>
+                  <Option value="2">已就绪</Option>
+                  <Option value="3">有异常</Option>
                 </Select>
               )}
             </FormItem>
@@ -522,6 +579,7 @@ export default class StoreTable extends PureComponent {
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
+              rowKey='id'
             />
           </div>
         </Card>

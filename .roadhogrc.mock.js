@@ -114,6 +114,12 @@ const proxy = {
     $body: postRule,
   },
   'GET /api/stores': getStore,
+  'POST /api/stores/1/entrance/open': {
+    ok: true,
+  },
+  'POST /api/stores/1/exit/open': {
+    ok: true,
+  },
   'POST /api/forms': (req, res) => {
     res.send({ message: 'Ok' });
   },
